@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.controller.name }}
+spec:
+  replicas: 1
+  selector:
+     matchLabels:
+      app: {{ .Values.controller.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.controller.name }}
+    spec:
+      containers:
+      - name: {{ .Values.controller.name }}
+        image: "us.gcr.io/pa-dburkhalter/k8s-demo-app:latest"
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: "1024Mi"
+          limits:
+            memory: "1024Mi"
+        env:
+            - name: POSTGRESQL_URL
+              value: foo@bar.com
+        ports:
+          - name: http # just a name
+            containerPort: 8080
+          - name: https
+            containerPort: 443
+        livenessProbe:
+          httpGet:
+            port: http
+            path: /actuator/health/livenessState # sounds to be the fix, as liveness endpoint is not available 28.07
+          initialDelaySeconds: 240
+        readinessProbe:
+          httpGet:
+            port: http
+            path: /actuator/health/readiness
+          initialDelaySeconds: 45
+        env:
+        - name: DEMO_GREETING
+          value: "Bonjour de 03-deployment.yaml"
+        - name: MY_NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: MY_POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: MY_POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: MY_POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: MY_POD_SERVICE_ACCOUNT
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.serviceAccountName

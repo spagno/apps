@@ -1,0 +1,9 @@
+controller:
+  name: "k8s-demo-app"
+  namespace: "k8s-demo-app"
+ingress:
+  enabled: true
+  annotations: {}
+  contour:
+    enabled: true
+    fqdn: "example.domain.tld"

@@ -1,0 +1,14 @@
+{{- if and .Values.ingress.contour.enabled .Values.ingress.contour.tls.enabled }}
+apiVersion: cert-manager.io/{{ .Values.certmanager.version }}
+kind: Certificate
+metadata:
+  name: {{ .Values.controller.name }}-httpproxy
+spec:
+  commonName: {{ .Values.fqdn }}
+  dnsNames:
+  - {{ .Values.ingress.contour.tls.fqdn }}
+  issuerRef:
+    name: {{ .Values.certmanager.issuer }}
+    kind: ClusterIssuer
+  secretName: {{ .Values.controller.name }}-httpproxy
+{{- end }}

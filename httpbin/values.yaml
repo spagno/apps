@@ -1,0 +1,20 @@
+controller:
+  name: "httpbin"
+  namespace: "httpbin"
+certmanager:
+  version: "v1"
+  issuer: "letsencrypt-prod"
+ingress:
+  enabled: true
+  annotations: {}
+  classic:
+    fqdn: "example.domain.tld"
+    tls:
+      enabled: true
+      fqdn: "example.domain.tld"
+  contour:
+    enabled: true
+    fqdn: "example.domain.tld"
+    tls:
+      enabled: true
+      fqdn: "example.domain.tld"

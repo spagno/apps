@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.controller.name }}
+  labels:
+    app: {{ .Values.controller.name }}
+    service: {{ .Values.controller.name }}
+spec:
+  ports:
+  - name: http
+    port: 8000
+    targetPort: 80
+  selector:
+    app: {{ .Values.controller.name }}

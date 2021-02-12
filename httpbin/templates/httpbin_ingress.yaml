@@ -1,0 +1,33 @@
+{{ if .Values.ingress.enabled }}
+{{ if not .Values.ingress.contour.enabled }}
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: {{ .Values.controller.name }}-httpproxy
+  annotations:
+{{- if .Values.defaultBackend.service.annotations }}
+  {{- range $key, $value := .Values.defaultBackend.service.annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+{{- end }}
+
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/ingress.class: contour
+    kubernetes.io/tls-acme: "true"
+  labels:
+    app: {{ .Values.controller.name }}
+spec:
+  tls:
+  - secretName: {{ .Values.controller.name }}
+    hosts:
+    - {{ .Values.ingress.classic.fqdn }}
+  rules:
+  - host: {{ .Values.ingress.classic.tls.fqdn }}
+    http:
+      paths:
+      - backend:
+          serviceName: {{ .Values.controller.name }}
+          servicePort: 8000
+{{ end }}
+{{ end }}

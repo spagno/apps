@@ -1,0 +1,17 @@
+{{ if and .Values.ingress.enabled .Values.ingress.contour.enabled }}
+apiVersion: projectcontour.io/v1
+kind: HTTPProxy
+metadata:
+  name: {{ .Values.controller.name }}-httpproxy
+spec:
+  virtualhost:
+    fqdn: {{ .Values.ingress.contour.fqdn }}
+    {{- if .Values.ingress.contour.tls.enabled }}
+    tls:
+      secretName: {{ .Values.controller.name }}-httpproxy
+    {{- end }}
+  routes:
+  - services:
+    - name: {{ .Values.controller.name }}
+      port: 8000
+{{ end }}
