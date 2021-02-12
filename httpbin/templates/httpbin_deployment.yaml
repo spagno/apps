@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.controller.name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.controller.name }}
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.controller.name }}
+        version: v1
+    spec:
+      serviceAccountName: {{ .Values.controller.name }}
+      containers:
+      - image: docker.io/kennethreitz/httpbin
+        imagePullPolicy: IfNotPresent
+        name: {{ .Values.controller.name }}
+        ports:
+        - containerPort: 80

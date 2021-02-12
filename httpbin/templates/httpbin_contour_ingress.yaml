@@ -1,0 +1,13 @@
+apiVersion: projectcontour.io/v1
+kind: HTTPProxy
+metadata:
+  name: {{ .Values.controller.name }}-httpproxy
+spec:
+  virtualhost:
+    fqdn: {{ .Values.fqdn }}
+    tls:
+      secretName: {{ .Values.controller.name }}-httpproxy
+  routes:
+  - services:
+    - name: {{ .Values.controller.name }}
+      port: 8000

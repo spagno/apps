@@ -1,0 +1,6 @@
+fqdn: "example.domain.tld"
+controller:
+  name: "httpbin"
+  namespace: "httpbin"
+certmanager:
+  version: "v1"

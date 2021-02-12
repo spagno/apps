@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/{{ .Values.certmanager.version }}
+kind: Certificate
+metadata:
+  name: {{ .Values.controller.name }}-httpproxy
+spec:
+  commonName: {{ .Values.fqdn }}
+  dnsNames:
+  - {{ .Values.fqdn }}
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  secretName: {{ .Values.controller.name }}-httpproxy
